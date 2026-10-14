@@ -1,11 +1,9 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-import { gjejUdhetimin, udhetimet } from "@/lib/udhetimet";
+import { gjejUdhetimin, type Udhetim } from "@/lib/udhetimet";
 
-export function generateStaticParams() {
-  return udhetimet.map((udhetim) => ({ id: udhetim.id }));
-}
+export const dynamic = "force-dynamic";
 
 type DetajetUdhetimitProps = {
   params: Promise<{ id: string }>;
@@ -15,11 +13,26 @@ export default async function DetajetUdhetimit({
   params,
 }: DetajetUdhetimitProps) {
   const { id } = await params;
-  const udhetim = gjejUdhetimin(id);
+  let udhetim: Udhetim | undefined;
 
-  if (!udhetim) {
-    notFound();
+  try {
+    udhetim = await gjejUdhetimin(id);
+  } catch {
+    return (
+      <main className="page-shell page-shell--narrow">
+        <div className="empty-state">
+          <p className="eyebrow">RIDE SHARE · DATABASE</p>
+          <h1>RideShare</h1>
+          <p role="alert">Nuk u lidhëm me databazën. Provo përsëri.</p>
+          <Link className="button button--primary" href="/">
+            Kthehu te lista
+          </Link>
+        </div>
+      </main>
+    );
   }
+
+  if (!udhetim) notFound();
 
   const kaVende = udhetim.vende > 0;
 
@@ -32,7 +45,8 @@ export default async function DetajetUdhetimit({
       <div className="detail-card">
         <p className="eyebrow">DETAJET E UDHËTIMIT</p>
         <h1>
-          {udhetim.nisja} <span aria-hidden="true">→</span> {udhetim.destinacioni}
+          {udhetim.nisja} <span aria-hidden="true">→</span>{" "}
+          {udhetim.destinacioni}
         </h1>
         <p className="detail-time">Nisja në {udhetim.ora}</p>
 
@@ -50,7 +64,7 @@ export default async function DetajetUdhetimit({
         {kaVende ? (
           <Link
             className="button button--primary"
-            href={"/udhetimi/" + udhetim.id + "/kerkesa"}
+            href={`/udhetimi/${udhetim.id}/kerkesa`}
           >
             Kërko vend
           </Link>
