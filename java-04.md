@@ -24,25 +24,25 @@ server.
 
 ## Prova 1
 
-**Hapat:** Hapat konkretë të kryer ishin ndryshimi i orës së ID 2 nga `08:15` në `08:25`, kontrolli i `/udhetimi/2` dhe rikthimi i orës në `08:15`.
+**Hapat:** Hapat konkretë: u ndryshua ora e ID 2 nga `08:15` në `08:25`, u kontrollua `/udhetimi/2` dhe ora u rikthye në `08:15`.
 
-**Rezultati:** Rezultati real i vëzhguar ishte shfaqja e `08:25` në faqen e ID 2 dhe, pas rikthimit, verifikimi i orës `08:15` në databazë.
+**Rezultati:** Rezultati real: `08:25` u shfaq në faqen e ID 2 dhe, pas rikthimit, ora `08:15` u verifikua në databazë.
 
 **Statusi:** PASS
 
 ## Prova 2
 
-**Hapat:** Hapat konkretë të kryer ishin shtimi i përkohshëm i `WHERE false` në query-n e `lexoUdhetimet()`, rifreskimi i faqes kryesore dhe rikthimi i query-së origjinale.
+**Hapat:** Hapat konkretë: u shtua përkohësisht `WHERE false` në query-n e `lexoUdhetimet()`, u rifreskua faqja kryesore dhe u rikthye query-ja origjinale.
 
-**Rezultati:** Rezultati real i vëzhguar ishte HTTP 200 me tekstin “Nuk ka udhëtime për momentin.”; pas rikthimit lista normale u shfaq dhe `WHERE false` nuk mbeti në kod.
+**Rezultati:** Rezultati real: faqja ktheu HTTP 200 dhe shfaqi “Nuk ka udhëtime për momentin.”; pas rikthimit lista normale u shfaq dhe `WHERE false` nuk mbeti në kod.
 
 **Statusi:** PASS
 
 ## Prova 3
 
-**Hapat:** Hapat konkretë të kryer ishin verifikimi i fallback-ut pa lidhje të vlefshme, vendosja e konfigurimit real lokal, ekzekutimi i `SELECT 1` dhe rifreskimi i listës nga Neon.
+**Hapat:** Hapat konkretë: u verifikua fallback-u pa lidhje të vlefshme, u vendos konfigurimi real lokal, u ekzekutua `SELECT 1` dhe u rifreskua lista nga Neon.
 
-**Rezultati:** Rezultati real i vëzhguar ishte kalimi i fallback-ut dhe rilidhjes me Neon, shfaqja e 3 udhëtimeve në listë, ndërsa skenari specifik `DATABASE_URL_PA_TEST` nuk u testua.
+**Rezultati:** Rezultati real: fallback-u dhe rilidhja me Neon kaluan, lista shfaqi 3 udhëtime, ndërsa skenari specifik `DATABASE_URL_PA_TEST` nuk u testua.
 
 **Statusi:** PASS
 
