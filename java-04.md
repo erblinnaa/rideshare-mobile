@@ -22,27 +22,27 @@ server.
 - `npm.cmd run build` — PASS.
 - Paketat `@neondatabase/serverless` dhe `server-only` janë në `package.json` dhe `package-lock.json`.
 
-## Prova 1
+## 4. Prova 1 — Ndryshimi ruhet në databazë
 
-**Hapat:** Hapat konkretë: u ndryshua ora e ID 2 nga `08:15` në `08:25`, u kontrollua `/udhetimi/2` dhe ora u rikthye në `08:15`.
+**Hapat konkretë:** U ndryshua ora e ID 2 nga `08:15` në `08:25`, u kontrollua `/udhetimi/2` dhe ora u rikthye në `08:15`.
 
-**Rezultati:** Rezultati real: `08:25` u shfaq në faqen e ID 2 dhe, pas rikthimit, ora `08:15` u verifikua në databazë.
-
-**Statusi:** PASS
-
-## Prova 2
-
-**Hapat:** Hapat konkretë: u shtua përkohësisht `WHERE false` në query-n e `lexoUdhetimet()`, u rifreskua faqja kryesore dhe u rikthye query-ja origjinale.
-
-**Rezultati:** Rezultati real: faqja ktheu HTTP 200 dhe shfaqi “Nuk ka udhëtime për momentin.”; pas rikthimit lista normale u shfaq dhe `WHERE false` nuk mbeti në kod.
+**Rezultati real:** `08:25` u shfaq në faqen e ID 2 dhe, pas rikthimit, ora `08:15` u verifikua në databazë.
 
 **Statusi:** PASS
 
-## Prova 3
+## 5. Prova 2 — Lista bosh nuk është gabim lidhjeje
 
-**Hapat:** Hapat konkretë: u verifikua fallback-u pa lidhje të vlefshme, u vendos konfigurimi real lokal, u ekzekutua `SELECT 1` dhe u rifreskua lista nga Neon.
+**Hapat konkretë:** U shtua përkohësisht `WHERE false` në query-n e `lexoUdhetimet()`, u rifreskua faqja kryesore dhe u rikthye query-ja origjinale.
 
-**Rezultati:** Rezultati real: fallback-u dhe rilidhja me Neon kaluan, lista shfaqi 3 udhëtime, ndërsa skenari specifik `DATABASE_URL_PA_TEST` nuk u testua.
+**Rezultati real:** Faqja ktheu HTTP 200 dhe shfaqi “Nuk ka udhëtime për momentin.”; pas rikthimit lista normale u shfaq dhe `WHERE false` nuk mbeti në kod.
+
+**Statusi:** PASS
+
+## 6. Prova 3 — Lidhja mungon dhe pastaj rikthehet
+
+**Hapat konkretë:** U verifikua fallback-u pa lidhje të vlefshme, u vendos konfigurimi real lokal, u ekzekutua `SELECT 1` dhe u rifreskua lista nga Neon.
+
+**Rezultati real:** Fallback-u dhe rilidhja me Neon kaluan, lista shfaqi 3 udhëtime, ndërsa skenari specifik `DATABASE_URL_PA_TEST` nuk u testua.
 
 **Statusi:** PASS
 
