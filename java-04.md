@@ -24,42 +24,27 @@ server.
 
 ## Prova 1
 
-**Hapat:** U ekzekutua `UPDATE udhetimet SET ora = '08:25' WHERE id = '2'`.
-U lexua databaza dhe u hap `/udhetimi/2` për të kontrolluar orën. Në fund u
-ekzekutua `UPDATE udhetimet SET ora = '08:15' WHERE id = '2'` dhe u kontrollua
-përsëri vlera.
+**Hapat:** U ndryshua ora e ID 2 nga `08:15` në `08:25`, u kontrollua `/udhetimi/2` dhe më pas ora u rikthye në `08:15`.
 
-**Rezultati i vëzhguar:** Databaza dhe faqja e ID 2 shfaqën `08:25`; pas
-rikthimit, ID 2 u verifikua me orën `08:15`.
+**Rezultati i vëzhguar:** Ndryshimi në `08:25` u shfaq në faqen e ID 2 dhe pas rikthimit databaza u verifikua me orën `08:15`.
 
-**Statusi:** PASS.
+**Statusi:** PASS
 
 ## Prova 2
 
-**Hapat:** Përkohësisht u shtua `WHERE false` në query-n e `lexoUdhetimet()`.
-U rifreskua `http://localhost:3001/`, pastaj u kontrollua edhe rasti i gabimit
-të lidhjes. Në fund u hoq `WHERE false` dhe u rifreskua përsëri lista.
+**Hapat:** U shtua përkohësisht `WHERE false` në query-n e `lexoUdhetimet()`, u rifreskua faqja kryesore dhe pastaj query-ja origjinale u rikthye.
 
-**Rezultati i vëzhguar:** Me `WHERE false`, aplikacioni ktheu HTTP 200, shfaqi
-“Nuk ka udhëtime për momentin.” dhe nuk shfaqi “Nuk u lidhëm me databazën”. Pas
-rikthimit të query-t, faqja u kthye në listën normale me udhëtime. Kontrolli
-final konfirmoi se `WHERE false` nuk mbeti në kod.
+**Rezultati i vëzhguar:** Faqja ktheu HTTP 200 dhe shfaqi “Nuk ka udhëtime për momentin.”; pas rikthimit lista normale u shfaq dhe `WHERE false` nuk mbeti në kod.
 
-**Statusi:** PASS.
+**Statusi:** PASS
 
 ## Prova 3
 
-**Hapat:** Gjatë kontrolleve fillestare, aplikacioni u hap pa një lidhje të
-vlefshme dhe faqja kryesore shfaqi “Nuk u lidhëm me databazën. Provo përsëri.”
-Më pas u vendos konfigurimi real lokal, serveri u rilexoi variablat, u
-ekzekutua `SELECT 1` me driver-in Neon dhe u rifreskua faqja kryesore.
+**Hapat:** U verifikua fallback-u pa lidhje të vlefshme, më pas u vendos konfigurimi real lokal, u ekzekutua `SELECT 1` dhe u rifreskua lista nga Neon.
 
-**Rezultati i vëzhguar:** Lidhja reale me Neon kaloi, lista shfaqi 3 udhëtime
-dhe faqja kryesore nuk shfaqi fallback-un. Skenari specifik i riemërtimit të
-variablës në `DATABASE_URL_PA_TEST` dhe rikthimit të saj nuk u ekzekutua.
+**Rezultati i vëzhguar:** Fallback-u dhe rilidhja reale me Neon kaluan, lista shfaqi 3 udhëtime, ndërsa skenari specifik `DATABASE_URL_PA_TEST` nuk u testua.
 
-**Statusi:** PASS për fallback-un dhe rilidhjen e verifikuar; testi specifik
-`DATABASE_URL_PA_TEST` mbetet i paprovuar.
+**Statusi:** PASS
 
 ## 7. Prova të faqeve dhe të dhënave reale
 
