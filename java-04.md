@@ -26,7 +26,7 @@ server.
 
 **Hapat:** U ndryshua ora e ID 2 nga `08:15` në `08:25`, u kontrollua `/udhetimi/2` dhe më pas ora u rikthye në `08:15`.
 
-**Rezultati i vëzhguar:** Ndryshimi në `08:25` u shfaq në faqen e ID 2 dhe pas rikthimit databaza u verifikua me orën `08:15`.
+**Rezultati:** Ndryshimi real në `08:25` u shfaq në faqen e ID 2 dhe pas rikthimit databaza u verifikua me orën `08:15`.
 
 **Statusi:** PASS
 
@@ -34,7 +34,7 @@ server.
 
 **Hapat:** U shtua përkohësisht `WHERE false` në query-n e `lexoUdhetimet()`, u rifreskua faqja kryesore dhe pastaj query-ja origjinale u rikthye.
 
-**Rezultati i vëzhguar:** Faqja ktheu HTTP 200 dhe shfaqi “Nuk ka udhëtime për momentin.”; pas rikthimit lista normale u shfaq dhe `WHERE false` nuk mbeti në kod.
+**Rezultati:** Faqja ktheu HTTP 200 dhe shfaqi “Nuk ka udhëtime për momentin.”; pas rikthimit lista normale u shfaq dhe `WHERE false` nuk mbeti në kod.
 
 **Statusi:** PASS
 
@@ -42,7 +42,7 @@ server.
 
 **Hapat:** U verifikua fallback-u pa lidhje të vlefshme, më pas u vendos konfigurimi real lokal, u ekzekutua `SELECT 1` dhe u rifreskua lista nga Neon.
 
-**Rezultati i vëzhguar:** Fallback-u dhe rilidhja reale me Neon kaluan, lista shfaqi 3 udhëtime, ndërsa skenari specifik `DATABASE_URL_PA_TEST` nuk u testua.
+**Rezultati:** Fallback-u dhe rilidhja reale me Neon kaluan, lista shfaqi 3 udhëtime, ndërsa skenari specifik `DATABASE_URL_PA_TEST` nuk u testua.
 
 **Statusi:** PASS
 
