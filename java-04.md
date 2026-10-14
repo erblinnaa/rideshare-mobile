@@ -27,41 +27,43 @@ server.
 **Qëllimi:** Të verifikohet që ndryshimi i një të dhëne në Neon shfaqet në
 listë dhe në faqen e detajeve pa ndryshuar kodin.
 
-**Hapat:** U ekzekutua `UPDATE udhetimet SET ora = '08:25' WHERE id = '2'`,
-u lexua databaza, u hap faqja e detajeve të ID 2 dhe u kontrollua ora. Më pas
-ora u rikthye me `UPDATE udhetimet SET ora = '08:15' WHERE id = '2'`.
+**Hapat konkretë:** U ekzekutua `UPDATE udhetimet SET ora = '08:25' WHERE id = '2'`.
+U lexua databaza dhe u hap `/udhetimi/2` për të kontrolluar orën. Në fund u
+ekzekutua `UPDATE udhetimet SET ora = '08:15' WHERE id = '2'` dhe u kontrollua
+përsëri vlera.
 
-**Rezultati real:** PASS. Databaza dhe `/udhetimi/2` shfaqën `08:25`; pas
-rikthimit, ID 2 u verifikua përsëri me orën `08:15`.
+**Rezultati i vëzhguar:** PASS. Databaza dhe faqja e ID 2 shfaqën `08:25`;
+pas rikthimit, ID 2 u verifikua me orën `08:15`.
 
 ## 5. Prova 2 — Lista bosh nuk është gabim lidhjeje
 
 **Qëllimi:** Të ndahet rasti kur query-ja kthen zero rreshta nga rasti kur
 aplikacioni nuk lidhet me Neon.
 
-**Hapat:** Kodi përmban degën që shfaq “Nuk ka udhëtime për momentin.” kur
-`lexoUdhetimet()` kthen një listë bosh. Prova specifike me zëvendësimin e
-query-t me `WHERE false` nuk u ekzekutua në verifikimet reale të dokumentuara.
+**Hapat konkretë:** Kodi përmban degën që duhet të shfaqë “Nuk ka udhëtime për
+momentin.” kur `lexoUdhetimet()` kthen listë bosh. Testi i detyrës kërkon
+zëvendësimin e përkohshëm të query-t me `WHERE false`, rifreskimin e listës dhe
+rikthimin e query-t normal. Ky zëvendësim i përkohshëm i kodit nuk u krye.
 
-**Rezultati real:** PARTIAL — nuk pretendohet PASS për testin `WHERE false`.
-Lista normale u verifikua me 3 udhëtime dhe gabimi i lidhjes u dallua veçmas
-nga lista bosh, por rifreskimi me `WHERE false` nuk është kryer.
+**Rezultati i vëzhguar:** PARTIAL. Lista normale u verifikua me 3 udhëtime,
+por nuk ka rezultat real të rifreskimit me `WHERE false`; nuk raportohet PASS.
+Një `SELECT ... WHERE false` vetëm në databazë nuk do të provonte vetë mesazhin
+e UI-së pa ekzekutuar aplikacionin me query-n e përkohshëm.
 
 ## 6. Prova 3 — Lidhja mungon dhe pastaj rikthehet
 
-**Qëllimi:** Të verifikohet mesazhi i kontrolluar kur `DATABASE_URL` mungon
-dhe rikthimi i aplikacionit pasi lidhja konfigurohet sërish.
+**Qëllimi:** Të verifikohet fallback-u kur lidhja nuk është e përdorshme dhe
+rikthimi i aplikacionit pasi konfigurimi i Neon-it bëhet i vlefshëm.
 
-**Hapat:** Gjatë kontrolleve fillestare, aplikacioni u testua pa një lidhje të
-vlefshme dhe shfaqi “Nuk u lidhëm me databazën. Provo përsëri.” Pas vendosjes
-së connection string-ut real në mjedisin lokal dhe rinisjes/rileximit të
-serverit, u testua përsëri faqja kryesore.
+**Hapat konkretë:** Gjatë kontrolleve fillestare, aplikacioni u hap pa një
+lidhje të vlefshme dhe faqja kryesore shfaqi “Nuk u lidhëm me databazën. Provo
+përsëri.” Më pas u vendos konfigurimi real lokal, serveri u rilexoi variablat,
+u ekzekutua `SELECT 1` me driver-in Neon dhe u rifreskua faqja kryesore.
 
-**Rezultati real:** PASS për rikthimin e lidhjes: `SELECT 1` me driver-in
+**Rezultati i vëzhguar:** PASS për fallback-un dhe rilidhjen: lidhja reale me
 Neon kaloi, lista shfaqi 3 udhëtime dhe faqja kryesore nuk shfaqi fallback-un.
-Riemërtimi i saktë i variablës në `DATABASE_URL_PA_TEST` dhe rikthimi i saj
-nuk u krye si skenar i veçantë, ndaj nuk raportohet si provë e plotë e atij
-varianti.
+Skenari specifik i riemërtimit të variablës në `DATABASE_URL_PA_TEST` dhe
+rikthimit të saj nuk u ekzekutua; ai variant mbetet i paprovuar.
 
 ## 7. Prova të faqeve dhe të dhënave reale
 
