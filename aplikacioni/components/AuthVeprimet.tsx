@@ -1,7 +1,9 @@
+
 "use client";
 
 import Link from "next/link";
-import { signIn, signOut } from "next-auth/react";
+import { signOut } from "next-auth/react";
+import Hyrja from "./Hyrja";
 
 type AuthVeprimetProps = {
   user: {
@@ -13,15 +15,7 @@ type AuthVeprimetProps = {
 
 export default function AuthVeprimet({ user }: AuthVeprimetProps) {
   if (!user) {
-    return (
-      <button
-        className="button button--small button--primary"
-        type="button"
-        onClick={() => signIn("github", { callbackUrl: "/panel" })}
-      >
-        Kyçu me GitHub
-      </button>
-    );
+    return <Hyrja callbackUrl="/panel" />;
   }
 
   return (
@@ -29,9 +23,11 @@ export default function AuthVeprimet({ user }: AuthVeprimetProps) {
       <span className="auth-user">
         {user.name ?? user.email ?? "Përdorues"} · {user.role}
       </span>
+
       <Link className="text-link text-link--compact" href="/panel">
         Paneli
       </Link>
+
       <button
         className="button button--small button--secondary"
         type="button"
