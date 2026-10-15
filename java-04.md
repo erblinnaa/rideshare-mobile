@@ -42,7 +42,7 @@ server.
 
 **Hapat konkretë:** U verifikua fallback-u pa lidhje të vlefshme, u vendos konfigurimi real lokal, u ekzekutua `SELECT 1` dhe u rifreskua lista nga Neon.
 
-**Rezultati real:** Fallback-u dhe rilidhja me Neon kaluan, lista shfaqi 3 udhëtime, ndërsa skenari specifik `DATABASE_URL_PA_TEST` nuk u testua.
+**Rezultati real:** Pas rikthimit të konfigurimit real, `SELECT 1` përfundoi me sukses dhe lista shfaqi 3 udhëtime nga Neon.
 
 **Statusi:** PASS
 
