@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import AuthNav from "@/components/AuthNav";
+
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,7 +12,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="sq">
-      <body>{children}</body>
+      <body>
+        <AuthNav />
+        {children}
+      </body>
     </html>
   );
 }

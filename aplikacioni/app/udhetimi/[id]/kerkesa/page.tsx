@@ -41,11 +41,12 @@ export default async function KerkesaPage({ params }: KerkesaPageProps) {
           <h1>Simulim: Në pritje</h1>
           <p>
             Kërkesa për udhëtimin nga <strong>{udhetim.nisja}</strong> në{" "}
-            <strong>{udhetim.destinacioni}</strong> është vetëm pjesë e këtij
-            simulimi.
+            <strong>{udhetim.destinacioni}</strong> është pjesë e simulimit të
+            Java 4.
           </p>
           <p className="simulation-note">
-            Kërkesa nuk i është dërguar shoferit dhe nuk u ruajt rezervim real.
+            Kërkesa nuk ruhet si rezervim real. Ndryshimi i orës bëhet nga
+            shoferi në panelin e Java 5.
           </p>
           <div className="action-row">
             <Link

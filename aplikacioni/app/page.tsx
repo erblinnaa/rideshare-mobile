@@ -28,10 +28,15 @@ export default async function Home() {
   return (
     <main className="page-shell">
       <header className="page-header">
-        <p className="eyebrow">RIDE SHARE · JAVA 4</p>
+        <p className="eyebrow">RIDE SHARE · JAVA 5</p>
         <h1>RideShare · Udhëtimet për AAB</h1>
         <p className="intro">
           Zgjidh një udhëtim dhe shiko detajet para se të kërkosh një vend.
+        </p>
+        <p>
+          <Link className="text-link" href="/panel">
+            Hyr / Paneli im
+          </Link>
         </p>
       </header>
 
@@ -51,7 +56,7 @@ export default async function Home() {
       </section>
 
       <p className="simulation-note">
-        Burimi: Neon · të dhëna fiktive për ushtrime. Nuk kryhet rezervim real.
+        Burimi: Neon · autentikimi dhe kërkesat ruhen në databazë.
       </p>
     </main>
   );
