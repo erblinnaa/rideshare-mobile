@@ -22,7 +22,7 @@ server.
 - `npm.cmd run build` — PASS.
 - Paketat `@neondatabase/serverless` dhe `server-only` janë në `package.json` dhe `package-lock.json`.
 
-## Prova 1
+### Prova 1
 
 **Hapat konkretë:** U ndryshua ora e ID 2 nga `08:15` në `08:25`, u kontrollua `/udhetimi/2` dhe ora u rikthye në `08:15`.
 
@@ -30,7 +30,7 @@ server.
 
 **Statusi:** PASS
 
-## Prova 2
+### Prova 2
 
 **Hapat konkretë:** U shtua përkohësisht `WHERE false` në query-n e `lexoUdhetimet()`, u rifreskua faqja kryesore dhe u rikthye query-ja origjinale.
 
@@ -38,7 +38,7 @@ server.
 
 **Statusi:** PASS
 
-## Prova 3
+### Prova 3
 
 **Hapat konkretë:** U verifikua fallback-u pa lidhje të vlefshme, u vendos konfigurimi real lokal, u ekzekutua `SELECT 1` dhe u rifreskua lista nga Neon.
 
