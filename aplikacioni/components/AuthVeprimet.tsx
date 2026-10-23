@@ -28,6 +28,10 @@ export default function AuthVeprimet({ user }: AuthVeprimetProps) {
         Paneli
       </Link>
 
+      <Link className="text-link text-link--compact" href="/kerkesa">
+        Kërkesat
+      </Link>
+
       <button
         className="button button--small button--secondary"
         type="button"
