@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="sq">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#155eef" />
+    <title>RideShare · Offline</title>
+    <style>
+      :root {
+        --background: #f4f7fb;
+        --foreground: #182230;
+        --muted: #5d6b7a;
+        --line: #dce4ed;
+        --surface: #ffffff;
+        --primary: #155eef;
+        --primary-dark: #0f47b5;
+        --soft-blue: #eaf1ff;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: Arial, Helvetica, sans-serif;
+        line-height: 1.5;
+      }
+
+      .shell {
+        width: min(100% - 24px, 760px);
+        margin: 0 auto;
+        padding: 32px 0;
+      }
+
+      header { margin-bottom: 28px; }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--primary);
+        font-size: .75rem;
+        font-weight: 700;
+        letter-spacing: .12em;
+      }
+
+      h1 { margin: 0 0 12px; font-size: clamp(2rem, 8vw, 3rem); line-height: 1.1; }
+      p { margin-top: 0; }
+
+      .intro, .source, .saved, .note { color: var(--muted); }
+      .status { font-weight: 700; }
+
+      .trip-list { display: grid; gap: 14px; }
+
+      .trip-card {
+        padding: 20px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: var(--surface);
+        box-shadow: 0 10px 28px rgb(24 34 48 / 6%);
+      }
+
+      .trip-card__topline {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+
+      .route { font-size: 1.1rem; font-weight: 700; }
+      .time { padding: 5px 10px; border-radius: 999px; background: var(--soft-blue); color: var(--primary-dark); font-weight: 700; }
+
+      dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin: 0 0 20px; }
+      dt { margin-bottom: 3px; color: var(--muted); font-size: .8rem; }
+      dd { margin: 0; font-weight: 700; }
+
+      button, .link {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 10px 16px;
+        font-size: .95rem;
+        font-weight: 700;
+      }
+
+      button { border: 1px solid #b9c8d9; background: #e7ebef; color: #65717d; cursor: not-allowed; width: 100%; }
+      .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+      .actions .refresh { border: 0; background: var(--primary); color: #fff; cursor: pointer; }
+      .actions .refresh:hover { background: var(--primary-dark); }
+      .actions .link { color: var(--primary-dark); }
+
+      .note { margin-top: 24px; font-size: .9rem; }
+
+      @media (max-width: 480px) {
+        .trip-card__topline { gap: 10px; }
+        .trip-card { border-radius: 14px; }
+        .actions { flex-direction: column; }
+        .actions > * { width: 100%; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <p class="eyebrow">RIDE SHARE · OFFLINE</p>
+        <h1>Udhëtimet e ruajtura</h1>
+        <p class="intro">Kjo është pamja publike offline. Të dhënat e llogarisë dhe rezervimet nuk ruhen në pajisje.</p>
+        <p id="status" class="status" role="status">Po lexohen udhëtimet e ruajtura…</p>
+        <p id="source" class="source">Burimi: duke kontrolluar…</p>
+        <p id="saved" class="saved">Koha e ruajtjes: —</p>
+      </header>
+
+      <section class="trip-list" aria-label="Udhëtimet publike të ruajtura">
+        <article class="trip-card" data-card="0">
+          <div class="trip-card__topline"><span class="route" data-route>Po ngarkohet…</span><span class="time" data-time>—</span></div>
+          <dl><div><dt>Vende</dt><dd data-seats>—</dd></div><div><dt>Vendtakimi</dt><dd data-meeting>—</dd></div></dl>
+          <button type="button" disabled>Rezervimi çaktivizuar offline</button>
+        </article>
+        <article class="trip-card" data-card="1">
+          <div class="trip-card__topline"><span class="route" data-route>Po ngarkohet…</span><span class="time" data-time>—</span></div>
+          <dl><div><dt>Vende</dt><dd data-seats>—</dd></div><div><dt>Vendtakimi</dt><dd data-meeting>—</dd></div></dl>
+          <button type="button" disabled>Rezervimi çaktivizuar offline</button>
+        </article>
+        <article class="trip-card" data-card="2">
+          <div class="trip-card__topline"><span class="route" data-route>Po ngarkohet…</span><span class="time" data-time>—</span></div>
+          <dl><div><dt>Vende</dt><dd data-seats>—</dd></div><div><dt>Vendtakimi</dt><dd data-meeting>—</dd></div></dl>
+          <button type="button" disabled>Rezervimi çaktivizuar offline</button>
+        </article>
+      </section>
+
+      <div class="actions">
+        <button id="refresh" class="refresh" type="button">Rifresko listën</button>
+        <a class="link" href="/">Kthehu te RideShare</a>
+      </div>
+      <p class="note">Rezervimi është i çaktivizuar offline dhe nuk dërgohet asnjë kërkesë POST.</p>
+    </main>
+
+    <script>
+      (() => {
+        const cacheName = "rideshare-public-v1";
+        const listUrl = "/api/udhetimet";
+        const cards = Array.from(document.querySelectorAll("[data-card]"));
+        const status = document.getElementById("status");
+        const source = document.getElementById("source");
+        const saved = document.getElementById("saved");
+        const refresh = document.getElementById("refresh");
+
+        function normalize(value) {
+          if (!Array.isArray(value)) return [];
+          return value.filter((item) => item && typeof item.id === "string" && typeof item.nisja === "string" && typeof item.destinacioni === "string" && typeof item.ora === "string" && typeof item.vendtakimi === "string" && typeof item.vende === "number").map(({ id, nisja, destinacioni, ora, vendtakimi, vende }) => ({ id, nisja, destinacioni, ora, vendtakimi, vende }));
+        }
+
+        function formatSavedAt(value) {
+          if (!value) return "Koha e ruajtjes: e panjohur";
+          const date = new Date(value);
+          if (Number.isNaN(date.getTime())) return "Koha e ruajtjes: e panjohur";
+          return `Koha e ruajtjes: ${date.toLocaleString("sq-AL")}`;
+        }
+
+        function showTrips(trips) {
+          cards.forEach((card, index) => {
+            const trip = trips[index];
+            const route = card.querySelector("[data-route]");
+            const time = card.querySelector("[data-time]");
+            const seats = card.querySelector("[data-seats]");
+            const meeting = card.querySelector("[data-meeting]");
+
+            if (!trip) {
+              route.textContent = "Nuk ka udhëtim të ruajtur";
+              time.textContent = "—";
+              seats.textContent = "—";
+              meeting.textContent = "—";
+              card.classList.add("is-empty");
+              return;
+            }
+
+            route.textContent = `${trip.nisja} → ${trip.destinacioni}`;
+            time.textContent = trip.ora;
+            seats.textContent = trip.vende === 0 ? "Nuk ka vende" : String(trip.vende);
+            meeting.textContent = trip.vendtakimi;
+            card.classList.remove("is-empty");
+          });
+        }
+
+        async function readCache() {
+          if (!("caches" in window)) return null;
+          const cache = await caches.open(cacheName);
+          const response = await cache.match(listUrl);
+          if (!response) return null;
+          return {
+            trips: normalize(await response.json()),
+            savedAt: response.headers.get("X-RideShare-Saved-At"),
+          };
+        }
+
+        async function writeCache(trips) {
+          const savedAt = new Date().toISOString();
+          const cache = await caches.open(cacheName);
+          await cache.put(listUrl, new Response(JSON.stringify(trips), {
+            status: 200,
+            headers: {
+              "Content-Type": "application/json; charset=utf-8",
+              "X-RideShare-Saved-At": savedAt,
+              "X-RideShare-Source": "network",
+            },
+          }));
+          return savedAt;
+        }
+
+        async function loadTrips() {
+          refresh.disabled = true;
+          status.textContent = "Po kontrollohet lista publike…";
+
+          try {
+            const response = await fetch(listUrl, { cache: "no-store", credentials: "omit" });
+            if (!response.ok) throw new Error("Lista nuk u lexua.");
+            const trips = normalize(await response.json());
+            const fromCache = response.headers.get("X-RideShare-Source") === "cache";
+            const savedAt = fromCache && response.headers.get("X-RideShare-Saved-At")
+              ? response.headers.get("X-RideShare-Saved-At")
+              : await writeCache(trips);
+
+            showTrips(trips);
+            saved.textContent = formatSavedAt(savedAt);
+            source.textContent = fromCache || !navigator.onLine
+              ? "Burimi: lista e ruajtur në pajisje · offline"
+              : "Burimi: Neon · online";
+            status.textContent = `${trips.length} udhëtime publike të disponueshme.`;
+          } catch {
+            const cached = await readCache();
+            if (cached) {
+              showTrips(cached.trips);
+              saved.textContent = formatSavedAt(cached.savedAt);
+              source.textContent = "Burimi: lista e ruajtur në pajisje · offline";
+              status.textContent = `${cached.trips.length} udhëtime të ruajtura janë të disponueshme.`;
+            } else {
+              showTrips([]);
+              saved.textContent = "Koha e ruajtjes: nuk ka të dhëna";
+              source.textContent = "Burimi: nuk ka listë të ruajtur";
+              status.textContent = "Nuk ka listë publike të ruajtur. Hape aplikacionin online një herë.";
+            }
+          } finally {
+            refresh.disabled = false;
+          }
+        }
+
+        refresh.addEventListener("click", loadTrips);
+        window.addEventListener("online", loadTrips);
+        window.addEventListener("offline", () => {
+          source.textContent = "Burimi: lista lokale · offline";
+        });
+        void loadTrips();
+      })();
+    </script>
+  </body>
+</html>

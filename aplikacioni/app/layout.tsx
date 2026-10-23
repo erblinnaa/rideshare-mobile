@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import AuthNav from "@/components/AuthNav";
+import Pwa from "@/components/Pwa";
 
 import "./globals.css";
 
@@ -14,6 +15,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="sq">
       <body>
         <AuthNav />
+        <Pwa />
         {children}
       </body>
     </html>
