@@ -2,163 +2,170 @@
 
 ## 1. Përmbledhje
 
-Java 7 e përfundon skenarin e MVP-së së RideShare: Arta hyn me GitHub,
-zgjedh një udhëtim, kërkon një vend dhe e sheh statusin e kërkesës së saj.
+Java 7 e zhvillon skenarin e RideShare nga simulimi i statusit në një kërkesë reale për vend. Arta hyn me GitHub, zgjedh një udhëtim, dërgon kërkesën dhe e sheh statusin te “Kërkesat e mia”.
 
-Kërkesa nuk është më simulim. Ajo ruhet në Neon me statusin fillestar
-`ne_pritje` dhe lidhet me përdoruesin e autentikuar.
+Kërkesa ruhet në Neon me statusin fillestar ne_pritje dhe lidhet me përdoruesin e autentikuar. Në këtë version nuk është implementuar veprimi i shoferit për ta pranuar ose refuzuar kërkesën.
 
-## 2. Skenari i Artës
+## 2. Rasti im
 
-Rrjedha e demonstruar ishte:
+Kodi personal: **P7-770**
+GitHub: **erblinnaa**
 
-1. Arta hap faqen e kërkesës për udhëtimin me ID 2.
-2. Aplikacioni e kërkon hyrjen me GitHub.
-3. Pas hyrjes, Arta kthehet te konfirmimi i udhëtimit të zgjedhur.
-4. Udhëtimi është Fushë Kosovë → AAB, në orën `08:25`, me 1 vend të lirë.
+Rasti zyrtar: **I PAVERIFIKUAR** — faqja zyrtare dhe modeli nuk ishin të
+arritshme gjatë përgatitjes së këtij versioni. Nuk po shpik numrin ose titullin
+e Rastit 1–5. Ky seksion duhet plotësuar me numrin dhe titullin zyrtar pasi të
+merret teksti i lëndës.
+
+## 3. Skenari i Artës
+
+1. Arta hap faqen e kërkesës për udhëtimin ID 2.
+2. Aplikacioni kërkon hyrjen me GitHub.
+3. Pas hyrjes, Arta kthehet te konfirmimi i udhëtimit.
+4. Udhëtimi është Fushë Kosovë → AAB, me orën 08:25 dhe 1 vend të lirë, sipas vëzhgimit në aplikacion.
 5. Arta klikon “Konfirmo kërkesën”.
-6. Aplikacioni shfaq statusin “Në pritje”.
-7. Arta e sheh kërkesën edhe te faqja “Kërkesat e mia”.
+6. Aplikacioni shfaq “Në pritje”.
+7. Arta e sheh kërkesën te “Kërkesat e mia”.
 
-## 3. Implementimi i MVP-së
+Ora 08:25 është vëzhgim i testimit. Disa skedarë SQL përmbajnë 08:15 si vlerë fillestare ose dokumentuese. Nuk u ndryshuan Neon-i ose SQL-të për ta barazuar këtë vlerë.
 
-U shtua tabela `kerkesat` me:
+## 4. Kodi personal P7
 
-- `id` si identifikues i kërkesës;
-- `udhetim_id` që referon `udhetimet.id`;
-- `udhetar_id` që referon `profilet.github_id`;
-- `status` me vlerat `ne_pritje`, `pranuar`, `refuzuar` ose `anuluar`;
-- `created_at` dhe `updated_at`.
+**Statusi: I PAVERIFIKUAR.** Kodi P7 nuk mund të merret nga gjeneratori zyrtar nga ky mjedis. Nuk vendoset vlerë e supozuar. Studenti duhet ta marrë nga gjeneratori zyrtar për llogarinë erblinnaa dhe ta plotësojë këtu me përshkrimin përkatës.
 
-Kërkesa krijohet nga një Server Action. Identiteti nuk merret nga formulari,
-por vetëm nga sesioni server-side i GitHub OAuth. `session.user.id` përputhet
-me `profilet.github_id`.
+## 5. Parashikimi
 
-U shtuan:
+Ky nuk pretendohet si tekst historik i shkruar para implementimit. Është formulim retrospektiv i dokumentuar tani; nuk ka evidencë që parashikimi fillestar është shkruar pa AI.
 
-- `aplikacioni/lib/kerkesat.ts` për krijimin dhe leximin e kërkesave;
-- `app/udhetimi/[id]/kerkesa/actions.ts` për ruajtjen e kërkesës;
-- faqja reale `/udhetimi/[id]/kerkesa`;
-- faqja `/kerkesa` për “Kërkesat e mia”.
+Parashikimi: përdoruesi pa sesion duhet të hyjë me GitHub dhe të kthehet te udhëtimi i zgjedhur. Pas konfirmimit, kërkesa duhet të ruhet në Neon me status ne_pritje, të lidhet me identitetin nga sesioni dhe të shfaqet te “Kërkesat e mia”. Kërkesa aktive e dytë duhet të ndalohet dhe udhëtimi me zero vende duhet të shfaqë “Nuk ka vende të lira”.
 
-Indeksi unik lejon vetëm një kërkesë aktive (`ne_pritje` ose `pranuar`) për
-të njëjtin përdorues dhe të njëjtin udhëtim.
+## 6. Dy probleme
 
-Numri `vende` nuk zvogëlohet kur kërkesa krijohet. Kërkesa mbetet në pritje dhe
-nuk pranohet automatikisht.
+### 1. Kërkesa ishte vetëm simulim
 
-## 4. Dy problemet e identifikuara dhe korrigjimet
+Faqja shfaqte “Në pritje”, por nuk ruante kërkesë reale në Neon.
 
-### Problemi 1 — Kërkesa ishte vetëm simulim
+#### Korrigjimi (arsyeja)
 
-Më parë faqja shfaqte statusin “Në pritje”, por nuk ruante asgjë në Neon.
+U krijuan tabela kerkesat, Server Action-i për krijimin dhe funksionet për
+leximin nga Neon, sepse statusi i mëparshëm ishte vetëm simulim. Statusi
+fillestar i ruajtur është ne_pritje.
 
-**Korrigjimi:** u krijua tabela `kerkesat`, Server Action-i dhe leximi real nga
-Neon. Statusi i ruajtur është `ne_pritje`.
+Skedari: aplikacioni/lib/kerkesat.ts
 
-### Problemi 2 — Statusi shfaqej edhe pa autentikim
+### 2. Statusi shfaqej pa autentikim
 
-Më parë faqja e kërkesës mund të hapej pa hyrje dhe shfaqte një status statik,
-pa e lidhur kërkesën me ndonjë përdorues.
+Faqja mund të hapej pa hyrje dhe të shfaqte status statik pa pronar të verifikuar.
 
-**Korrigjimi:** faqja kërkon hyrje me GitHub, e kthen përdoruesin te udhëtimi i
-zgjedhur dhe përdor vetëm identitetin nga sesioni server-side.
+#### Korrigjimi (arsyeja)
 
-## 5. Siguria dhe lejet
+Faqja kërkon GitHub dhe përdor callback-un për kthimin te udhëtimi, sepse
+statusi duhej të lidhej me një përdorues real. udhetar_id merret vetëm nga
+sesioni server-side dhe jo nga formulari.
 
-- Përdoruesi pa sesion nuk mund të krijojë kërkesë.
-- `udhetar_id` merret nga sesioni dhe nuk besohet nga klienti.
-- Serveri kontrollon që udhëtimi ekziston.
-- Serveri kontrollon që ka vende të lira.
-- Indeksi unik mbron nga kërkesat aktive të dyfishta.
-- Statusi fillestar është gjithmonë `ne_pritje`.
-- Service Worker-i i Java 6 nuk ruan kërkesa POST ose të dhëna private.
-- Kërkesa nuk e ndryshon numrin e vendeve.
+## 7. Implementimi
 
-Në këtë version është implementuar krijimi dhe leximi i kërkesës. Nuk është
-implementuar ende një veprim i shoferit për ta ndryshuar statusin në `pranuar`
-ose `refuzuar`; prandaj asnjë status nuk pretendohet si i ndryshuar gjatë
-provave.
+U implementuan tabela kerkesat, krijimi dhe leximi real i kërkesave, faqja e konfirmimit dhe faqja “Kërkesat e mia”. Indeksi unik lejon vetëm një kërkesë aktive për përdorues dhe udhëtim. Numri vende nuk zvogëlohet dhe kërkesa nuk pranohet automatikisht. Veprimi i shoferit për pranuar/refuzuar nuk është implementuar.
 
-## 6. Provat reale
+## 8. Skedarët e ndryshuar dhe arsyeja
 
-### Prova 1 — Hyrja dhe zgjedhja e udhëtimit
+Skedarët e ndryshuar në commit-in Java 7 janë:
+
+- aplikacioni/app/kerkesa/page.tsx — faqja dhe leximi i “Kërkesat e mia”;
+- aplikacioni/app/page.tsx — etiketimi Java 7 dhe përshkrimi i burimit;
+- aplikacioni/app/udhetimi/[id]/kerkesa/actions.ts — Server Action për ruajtjen;
+- aplikacioni/app/udhetimi/[id]/kerkesa/page.tsx — autentikimi, konfirmimi, statusi dhe pa-vendet;
+- aplikacioni/components/AuthVeprimet.tsx — lidhja e navigimit me “Kërkesat”;
+- aplikacioni/lib/kerkesat.ts — krijimi, kontrolli dhe leximi i kërkesave;
+- aplikacioni/schema-java07.sql — tabela, lidhjet referenciale dhe indeksi unik;
+- java-07.md — dokumentimi i implementimit, provave dhe kufizimeve.
+
+## 9. Provat reale
+
+### Prova 1 — Hyrja me GitHub dhe kthimi te udhëtimi
 
 **Statusi: PASS**
 
-**Çfarë pritej:** Përdoruesi pa sesion duhet të kërkohet të hyjë me GitHub dhe,
-pas hyrjes, duhet të kthehet te udhëtimi që kishte zgjedhur.
+#### Hapat
 
-**Çfarë ndodhi realisht:** Faqja e kërkesës fillimisht kërkoi hyrje. Pas klikimit
-“Kyçu me GitHub”, u hap faqja e konfirmimit për udhëtimin me ID 2.
+1. U hap faqja e kërkesës për ID 2 pa sesion.
+2. U klikua “Kyçu me GitHub”.
+3. Pas hyrjes u kontrollua faqja e kthimit.
 
-Udhëtimi ishte Fushë Kosovë → AAB, në orën `08:25`, me 1 vend të lirë.
+#### Pritshmëria
+
+Përdoruesi pa sesion duhet të hyjë me GitHub dhe të kthehet te udhëtimi i zgjedhur.
+
+#### Vëzhgimi
+
+Hyrja funksionoi dhe u hap faqja e konfirmimit për ID 2. Udhëtimi u vëzhgua Fushë Kosovë → AAB, 08:25, me 1 vend të lirë.
 
 ### Prova 2 — Krijimi dhe ruajtja e kërkesës
 
 **Statusi: PASS**
 
-**Çfarë pritej:** Pas konfirmimit, kërkesa duhet të ruhet në Neon me statusin
-`ne_pritje` dhe përdoruesi duhet ta shohë në “Kërkesat e mia”.
+#### Hapat
 
-**Çfarë ndodhi realisht:** Pas klikimit “Konfirmo kërkesën”, u shfaq statusi
-“Në pritje” dhe mesazhi i ruajtjes me sukses. Në Neon u verifikua rreshti i
-kërkesës për udhëtimin me ID 2 me status `ne_pritje`. Faqja “Kërkesat e mia”
-shfaqi kërkesën, statusin dhe kohën e krijimit.
+1. U klikua “Konfirmo kërkesën” për ID 2.
+2. U kontrolluan mesazhi dhe statusi në aplikacion.
+3. U kontrollua në Neon kërkesa për ID 2.
+4. U hap “Kërkesat e mia”.
+
+#### Pritshmëria
+
+Kërkesa duhet të ruhet në Neon me statusin ne_pritje dhe të shfaqet te “Kërkesat e mia”.
+
+#### Vëzhgimi
+
+Kërkesa u ruajt në Neon me status ne_pritje; u verifikua një kërkesë për ID 2. Faqja shfaqi kërkesën dhe statusin.
 
 ### Prova 3 — Kërkesa e dyfishtë dhe udhëtimi pa vende
 
 **Statusi: PASS**
 
-**Çfarë pritej:** Një përdorues me kërkesë aktive nuk duhet të mund të krijojë
-një kërkesë të dytë për të njëjtin udhëtim. Një udhëtim me zero vende duhet të
-refuzohet.
+#### Hapat
 
-**Çfarë ndodhi realisht:** Pas hapjes së statusit, kërkesa ekzistuese u njoh dhe
-nuk u shfaq mundësia për konfirmim të ri. Në Neon u verifikua se për përdoruesin
-dhe udhëtimin me ID 2 ekzistonte vetëm një kërkesë.
+1. U hap përsëri kërkesa ekzistuese për ID 2.
+2. U kontrollua nëse shfaqej konfirmim i dytë.
+3. U hap drejtpërdrejt /udhetimi/3/kerkesa.
+4. U kontrollua mesazhi për vendet.
 
-Udhëtimi me ID 3, Lipjan → AAB, kishte 0 vende dhe shfaqi “Nuk ka vende të
-lira”. I njëjti rezultat u shfaq edhe pas hyrjes direkte në
-`/udhetimi/3/kerkesa`.
+#### Pritshmëria
 
-## 7. Teste që nuk janë kryer
+Kërkesa aktive e dytë duhet të ndalohet. Udhëtimi me zero vende duhet të refuzohet.
 
-Nuk janë pretenduar si të kryera:
+#### Vëzhgimi
 
-- testimi në telefon real;
-- testimi me një koleg tjetër;
-- ndryshimi i statusit nga një shofer në `pranuar` ose `refuzuar`;
-- testimi në production ose në një mjedis tjetër nga Chrome dhe Neon-i i
-  përdorur për këtë projekt.
+Kërkesa ekzistuese u njoh dhe nuk u ofrua konfirmim i dytë. Për ID 3, Lipjan → AAB, me 0 vende, u shfaq “Nuk ka vende të lira”.
 
-## 8. Shpjegimi 2-minutësh
+## 10. Ndihma nga AI
 
-“RideShare është një aplikacion për gjetjen dhe kërkimin e vendeve në udhëtime.
-Në këtë skenar, Arta hap një udhëtim nga Fushë Kosova për në AAB. Nëse nuk është
-e kyçur, aplikacioni e dërgon te hyrja me GitHub dhe pas hyrjes e kthen te
-udhëtimi që kishte zgjedhur.
+ChatGPT dhe Codex u përdorën për analizën e kërkesave, analizën dhe implementimin e rrjedhës Next.js, Server Action-it dhe Neon-it, rishikimin e kodit dhe historisë Git, analizën e rezultateve të testimit dhe përgatitjen e këtij raporti. Përdorimi i AI nuk fshihet. Rezultatet e hyrjes dhe Neon-it janë rezultate të testimit të raportuar në aplikacion; AI nuk pretendohet si dëshmitar i tyre dhe demonstrimi me koleg nuk pretendohet i kryer.
 
-Udhëtimi me ID 2 kishte orën 08:25 dhe një vend të lirë. Arta klikon
-‘Konfirmo kërkesën’ dhe kërkesa ruhet në Neon me statusin ‘Në pritje’. Kërkesa
-lidhet me udhëtimin përmes `udhetim_id` dhe me Artën përmes `udhetar_id`, i cili
-merret nga `session.user.id` i GitHub OAuth dhe përputhet me
-`profilet.github_id`.
+## 11. Ndryshimi i ri
 
-Arta mund ta shohë kërkesën te faqja ‘Kërkesat e mia’, bashkë me statusin dhe
-orën e krijimit. Nëse provon ta kërkojë përsëri të njëjtin udhëtim, indeksi unik
-dhe kontrolli server-side e ndalojnë kërkesën e dyfishtë. Për udhëtimin me ID 3,
-ku nuk ka vende, aplikacioni shfaq ‘Nuk ka vende të lira’.
+Ndryshimi i ri ishte kalimi nga statusi statik/simulimi në hyrje me GitHub dhe
+ruajtje reale në Neon. Formulari dërgon identifikuesin e udhëtimit, ndërsa
+identiteti merret nga sesioni server-side.
 
-Kërkesa nuk e zvogëlon automatikisht numrin e vendeve dhe nuk pranohet
-automatikisht. Në këtë version statusi fillestar është vetëm ‘Në pritje’. Roli
-`shofer` ekziston nga Java 5 dhe kontrollon ndryshimin e orës së udhëtimit, por
-ndryshimi i statusit të kërkesës nga shoferi nuk është pjesë e këtij MVP-je.”
+## 12. Kufizimet e testimit
 
-## 9. Përfundim
+Testimi me koleg nuk është konfirmuar dhe nuk paraqitet si i kryer. Nuk është provuar miratimi/refuzimi nga shoferi, testimi në telefon real, production ose mjedis tjetër nga Chrome dhe Neon-i i përdorur.
 
-Skenari i Artës u realizua nga hyrja me GitHub deri te ruajtja dhe shfaqja e
-statusit të kërkesës. U korrigjuan simulimi i vjetër dhe mungesa e autentikimit
-në faqen e kërkesës. Funksionalitetet e Java 4, Java 5 dhe Java 6 u ruajtën.
+## 13. Commit-et Para dhe Pas
 
-Nuk është bërë `git commit` ose `git push`.
+Commit-et janë në të njëjtin repository, në historinë e main, dhe Para është paraardhës i Pas:
+
+- **Para:** [4f75773b669bc7e21d7fd718e5c4e96e2e36c82f](https://github.com/erblinnaa/rideshare-mobile/commit/4f75773b669bc7e21d7fd718e5c4e96e2e36c82f)
+- **Pas:** [c5d2bcc54aef1dad6c91bd49627a784117958943](https://github.com/erblinnaa/rideshare-mobile/commit/c5d2bcc54aef1dad6c91bd49627a784117958943)
+
+Verifikimi lokal tregoi se c5d2bcc është commit-i aktual i main dhe 4f75773 është në historinë para tij.
+
+## 14. Ora 08:25 dhe SQL-i
+
+Ora 08:25 është vëzhguar gjatë testimit në aplikacion. Disa SQL të versionuara, përfshirë seed-in ose komentin e Java 5, përmbajnë 08:15 si vlerë fillestare/dokumentuese. Nuk u ndryshuan të dhënat e Neon-it ose skedarët SQL vetëm për ta barazuar orën.
+
+## 15. Përfundim
+
+Java 7 kalon nga simulimi te kërkesa reale: hyrje me GitHub, ruajtje në Neon me ne_pritje, shfaqje te “Kërkesat e mia”, ndalim i kërkesave aktive të dyfishta dhe refuzim i udhëtimeve pa vende.
+
+Raporti dokumenton tri prova me hapa, pritshmëri dhe vëzhgime, dy probleme me korrigjimet, skedarët e ndryshuar, përdorimin e AI-së, kufizimet dhe lidhjet Para/Pas. Rasti zyrtar 1–5 dhe kodi P7 mbeten të paverifikuara për shkak të mungesës së aksesit te burimi dhe gjeneratori zyrtar.
