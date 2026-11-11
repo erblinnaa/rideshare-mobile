@@ -52,11 +52,11 @@ Codex u përdor për analizën e arkitekturës Next.js, leximin e udhëzimeve dh
 
 ## Prova me një hyrje të re
 
-Hyrja që provova: Ndryshimi i tekstit pa e konfirmuar.
+Hyrja që provova: Konfirmova “Biblioteka” dhe më pas ndryshova tekstin në “Parkingu” pa e konfirmuar.
 
-- Hyrja që provova: vendtakim i ri i shkruar në fushë, pa klikuar për konfirmim;
+- Hyrja që provova: fillimisht “Biblioteka” e konfirmuar, pastaj “Parkingu” i shkruar pa konfirmim;
 - Parashikimi im para klikimit: vendtakimi i konfirmuar duhet të mbetet i pandryshuar;
-- Çfarë pashë realisht: teksti i ri mbeti vetëm draft dhe vendtakimi i konfirmuar nuk ndryshoi;
+- Çfarë pashë realisht: testi kaloi në shfletuesin lokal; vendtakimi i konfirmuar mbeti “Biblioteka”, ndërsa “Parkingu” mbeti vetëm draft;
 - Skedari dhe funksioni që e shpjegojnë: `aplikacioni/components/Vendtakim.tsx`, `konfirmoVendtakimin`;
 - Çfarë kuptova ose korrigjova: drafti dhe vendtakimi i konfirmuar janë dy gjendje të ndara dhe vlera pastrohet me `trim()`.
 
