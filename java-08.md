@@ -52,8 +52,6 @@ Codex u përdor për analizën e arkitekturës Next.js, leximin e udhëzimeve dh
 
 ## Prova me një hyrje të re
 
-Hyrja që provova: Konfirmova “Biblioteka” dhe më pas ndryshova tekstin në “Parkingu” pa e konfirmuar.
-
 - Hyrja që provova: fillimisht “Biblioteka” e konfirmuar, pastaj “Parkingu” i shkruar pa konfirmim;
 - Parashikimi im para klikimit: vendtakimi i konfirmuar duhet të mbetet i pandryshuar;
 - Çfarë pashë realisht: testi kaloi në shfletuesin lokal; vendtakimi i konfirmuar mbeti “Biblioteka”, ndërsa “Parkingu” mbeti vetëm draft;
