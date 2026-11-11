@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 
 import { gjejUdhetimin, type Udhetim } from "@/lib/udhetimet";
 
+import Vendtakim from "@/components/Vendtakim";
+
 export const dynamic = "force-dynamic";
 
 type DetajetUdhetimitProps = {
@@ -60,6 +62,8 @@ export default async function DetajetUdhetimit({
             <dd>{udhetim.vende}</dd>
           </div>
         </dl>
+
+        {kaVende ? <Vendtakim /> : null}
 
         {kaVende ? (
           <Link

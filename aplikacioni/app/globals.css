@@ -295,6 +295,105 @@ h1 {
   border-bottom: 1px solid var(--line);
 }
 
+.meeting-picker {
+  display: grid;
+  gap: 14px;
+  margin: 24px 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #f8fbff;
+}
+
+.meeting-picker .eyebrow {
+  margin-bottom: -6px;
+}
+
+.meeting-picker h2 {
+  margin-bottom: -4px;
+  font-size: 1.25rem;
+}
+
+.meeting-picker__intro {
+  margin-bottom: 2px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.meeting-picker__manual,
+.meeting-picker__location,
+.meeting-picker__confirmed {
+  display: grid;
+  gap: 8px;
+}
+
+.meeting-picker label,
+.meeting-picker__confirmed span {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.meeting-picker__input-row {
+  display: grid;
+  gap: 10px;
+}
+
+.meeting-picker input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid #b9c8d9;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: var(--surface);
+  color: var(--foreground);
+  font: inherit;
+}
+
+.meeting-picker input:focus-visible {
+  outline: 3px solid #93b4ff;
+  outline-offset: 2px;
+  border-color: var(--primary);
+}
+
+.meeting-picker__error {
+  min-height: 24px;
+  margin: 0;
+  color: #b42318;
+  font-size: 0.88rem;
+}
+
+.meeting-picker__status,
+.meeting-picker__accuracy {
+  min-height: 24px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.meeting-picker__status[data-state="success"] {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.meeting-picker__status[data-state="denied"],
+.meeting-picker__status[data-state="timeout"],
+.meeting-picker__status[data-state="unavailable"] {
+  color: #8a5b00;
+}
+
+.meeting-picker__confirmed {
+  margin-top: 4px;
+  border-top: 1px solid var(--line);
+  padding-top: 14px;
+}
+
+.meeting-picker__confirmed p {
+  margin: 0;
+  color: var(--primary-dark);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
 .status-card {
   text-align: center;
 }
@@ -473,5 +572,9 @@ h1 {
   .action-row .button,
   .action-row .text-link {
     width: 100%;
+  }
+
+  .meeting-picker {
+    padding: 16px;
   }
 }
