@@ -1,7 +1,11 @@
 import Link from "next/link";
+import { getServerSession } from "next-auth/next";
 import { notFound } from "next/navigation";
 
+import PreferuarButton from "@/components/PreferuarButton";
 import { gjejUdhetimin, type Udhetim } from "@/lib/udhetimet";
+import { authOptions } from "@/lib/auth";
+import { eshteUdhetimiPreferuar } from "@/lib/favoritet";
 
 import Vendtakim from "@/components/Vendtakim";
 
@@ -37,6 +41,21 @@ export default async function DetajetUdhetimit({
   if (!udhetim) notFound();
 
   const kaVende = udhetim.vende > 0;
+  let session = null;
+  let initiallyRuajtur = false;
+  let gabimFillestar = false;
+
+  try {
+    session = await getServerSession(authOptions);
+    if (session?.user?.id) {
+      initiallyRuajtur = await eshteUdhetimiPreferuar(
+        udhetim.id,
+        session.user.id,
+      );
+    }
+  } catch {
+    gabimFillestar = Boolean(session?.user?.id);
+  }
 
   return (
     <main className="page-shell page-shell--narrow">
@@ -62,6 +81,13 @@ export default async function DetajetUdhetimit({
             <dd>{udhetim.vende}</dd>
           </div>
         </dl>
+
+        <PreferuarButton
+          udhetimId={udhetim.id}
+          initiallyRuajtur={initiallyRuajtur}
+          iAutentikuar={Boolean(session?.user?.id)}
+          gabimFillestar={gabimFillestar}
+        />
 
         {kaVende ? <Vendtakim /> : null}
 

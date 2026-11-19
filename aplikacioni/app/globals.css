@@ -283,6 +283,55 @@ h1 {
   font-size: clamp(2rem, 8vw, 3rem);
 }
 
+.favorite-control {
+  display: grid;
+  gap: 9px;
+  margin: 24px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 20px 0;
+}
+
+.favorite-control h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.favorite-control__eyebrow {
+  margin: 0 0 5px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.favorite-control__button[data-state="saved"] {
+  border-color: #9bc8b3;
+  background: #eef9f1;
+  color: #17603a;
+}
+
+.favorite-control__button:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+  transform: none;
+}
+
+.favorite-control__status {
+  min-height: 24px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.favorite-control__status[role="alert"] {
+  color: #b42318;
+}
+
+.favorite-control__retry {
+  justify-self: start;
+}
+
 .detail-time {
   margin-bottom: 28px;
   font-size: 1.1rem;
